@@ -1,0 +1,6 @@
+version: "3.9"
+services:
+  dietanalysis:
+    image: vezzdawg/diet-analysis:latest
+    container_name: dietanalysis
+    restart: "no"
