@@ -7,29 +7,26 @@ import LineChartComponent from '@/components/LineChartComponent';
 import RadarChartComponent from '@/components/RadarChartComponent';
 import StatsCards from '@/components/StatsCards';
 import MetadataBar from '@/components/MetadataBar';
+import { useNutritionalData } from '@/hooks/useNutritionalData';
 
 export default function Home() {
   const [dietFilter, setDietFilter] = useState('All');
-  const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastUpdated, setLastUpdated] = useState('');
-  const [executionTime, setExecutionTime] = useState(142);
+
+  const { data, loading, executionTime, usingMock, refetch } = useNutritionalData();
 
   const dietTypes = ['All', 'Vegan', 'Keto', 'Paleo', 'Mediterranean', 'Dash'];
 
   useEffect(() => {
-  const timer = setTimeout(() => {
-    setLastUpdated(new Date().toLocaleTimeString());
-  }, 0);
-  return () => clearTimeout(timer);
-}, []);
+    const timer = setTimeout(() => {
+      setLastUpdated(new Date().toLocaleTimeString());
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleRefresh = () => {
-    setIsRefreshing(true);
-    setTimeout(() => {
-      setIsRefreshing(false);
-      setLastUpdated(new Date().toLocaleTimeString());
-      setExecutionTime(Math.floor(Math.random() * 200) + 100);
-    }, 1500);
+    refetch();
+    setLastUpdated(new Date().toLocaleTimeString());
   };
 
   return (
@@ -42,17 +39,24 @@ export default function Home() {
             <h1 className="text-4xl font-bold text-blue-400 mb-2">Nutritional Insights</h1>
             <p className="text-gray-400">Explore macronutrient data across diet types and cuisines</p>
           </div>
-          <button
-            onClick={handleRefresh}
-            disabled={isRefreshing}
-            className={`px-6 py-3 rounded-xl font-medium transition-all ${
-              isRefreshing
-                ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                : 'bg-blue-500 hover:bg-blue-600 text-white'
-            }`}
-          >
-            {isRefreshing ? '⟳ Refreshing...' : '⟳ Refresh Data'}
-          </button>
+          <div className="flex items-center gap-4">
+            {usingMock && (
+              <span className="text-xs text-yellow-400 bg-yellow-400/10 px-3 py-1 rounded-full">
+                Using mock data
+              </span>
+            )}
+            <button
+              onClick={handleRefresh}
+              disabled={loading}
+              className={`px-6 py-3 rounded-xl font-medium transition-all ${
+                loading
+                  ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                  : 'bg-blue-500 hover:bg-blue-600 text-white'
+              }`}
+            >
+              {loading ? '⟳ Refreshing...' : '⟳ Refresh Data'}
+            </button>
+          </div>
         </div>
 
         {/* Stats Cards */}
@@ -86,22 +90,22 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-gray-900 rounded-2xl p-6">
             <h2 className="text-lg font-semibold mb-4 text-gray-200">Average Macronutrients by Diet Type</h2>
-            <BarChartComponent filter={dietFilter} />
+            <BarChartComponent filter={dietFilter} data={data} />
           </div>
 
           <div className="bg-gray-900 rounded-2xl p-6">
             <h2 className="text-lg font-semibold mb-4 text-gray-200">Recipe Distribution by Diet Type</h2>
-            <PieChartComponent filter={dietFilter} />
+            <PieChartComponent filter={dietFilter} data={data} />
           </div>
 
           <div className="bg-gray-900 rounded-2xl p-6">
             <h2 className="text-lg font-semibold mb-4 text-gray-200">Protein Trends Across Cuisines</h2>
-            <LineChartComponent filter={dietFilter} />
+            <LineChartComponent filter={dietFilter} data={data} />
           </div>
 
           <div className="bg-gray-900 rounded-2xl p-6">
             <h2 className="text-lg font-semibold mb-4 text-gray-200">Nutrient Profile by Diet Type</h2>
-            <RadarChartComponent filter={dietFilter} />
+            <RadarChartComponent filter={dietFilter} data={data} />
           </div>
         </div>
 
