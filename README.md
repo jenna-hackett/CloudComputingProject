@@ -6,56 +6,6 @@ A cloud-native web dashboard that visualizes macronutrient data from the All_Die
 
 This project is Phase 2 of a cloud computing project that moves a locally-tested Azure Function to the cloud and connects it to an interactive web dashboard. The dashboard displays nutritional insights across different diet types and cuisines.
 
-## 🏗️ Architecture
-
-CloudComputingProject/
-
-├── .github/workflows/ # CI/CD pipeline
-
-│ └── deploy.yml
-
-├── backend/ # Azure Function backend
-
-│ ├── lambda_function.py # HTTP-triggered Azure Function
-
-│ ├── data_analysis.py # Data processing logic
-
-│ ├── requirements.txt # Python dependencies
-
-│ └── All_Diets.csv # Dataset
-
-├── frontend/ # Next.js dashboard
-
-│ ├── src/
-
-│ │ ├── app/
-
-│ │ │ ├── page.js # Main dashboard page
-
-│ │ │ └── layout.js # App layout
-
-│ │ ├── components/ # React components
-
-│ │ │ ├── BarChartComponent.jsx
-
-│ │ │ ├── PieChartComponent.jsx
-
-│ │ │ ├── LineChartComponent.jsx
-
-│ │ │ ├── RadarChartComponent.jsx
-
-│ │ │ ├── StatsCards.jsx
-
-│ │ │ └── MetadataBar.jsx
-
-│ │ └── hooks/
-
-│ │ └── useNutritionalData.js
-
-├── Dockerfile
-
-└── compose.yaml
-
 ## 🚀 Features
 
 - **4 Interactive Charts** — Bar, Pie, Line, and Radar charts built with Recharts
