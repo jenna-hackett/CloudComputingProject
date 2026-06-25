@@ -11,18 +11,11 @@ import { useNutritionalData } from '@/hooks/useNutritionalData';
 
 export default function Home() {
   const [dietFilter, setDietFilter] = useState('All');
-  const [searchQuery, setSearchQuery] = useState('');
   const [lastUpdated, setLastUpdated] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [apiMessage, setApiMessage] = useState('');
 
   const { data, loading, executionTime, usingMock, refetch } = useNutritionalData();
 
   const dietTypes = ['All', 'Vegan', 'Keto', 'Paleo', 'Mediterranean', 'Dash'];
-
-  const filteredDietTypes = dietTypes.filter((d) =>
-    d.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -34,11 +27,6 @@ export default function Home() {
   const handleRefresh = () => {
     refetch();
     setLastUpdated(new Date().toLocaleTimeString());
-  };
-
-  const handleApiButton = (type) => {
-    setApiMessage(`Fetching ${type}...`);
-    setTimeout(() => setApiMessage(`✅ ${type} loaded successfully!`), 1000);
   };
 
   return (
@@ -112,7 +100,7 @@ export default function Home() {
             </div>
 
             <div className="bg-gray-900 rounded-2xl p-6">
-              <h2 className="text-lg font-semibold mb-4 text-gray-200">Protein Trends Across Cuisines</h2>
+              <h2 className="text-lg font-semibold mb-4 text-gray-200">Macronutrient Trends Across Diet Types</h2>
               <LineChartComponent filter={dietFilter} data={data} />
             </div>
 
@@ -121,6 +109,7 @@ export default function Home() {
               <RadarChartComponent filter={dietFilter} data={data} />
             </div>
           </div>
+
         </div>
       </main>
 

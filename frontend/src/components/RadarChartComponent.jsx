@@ -11,37 +11,34 @@ import {
   ResponsiveContainer
 } from 'recharts';
 
-const fallback = [
-  { nutrient: 'Protein', Vegan: 18.5, Keto: 42.1, Paleo: 35.6, Mediterranean: 28.3 },
-  { nutrient: 'Carbs', Vegan: 45.2, Keto: 8.4, Paleo: 22.1, Mediterranean: 38.6 },
-  { nutrient: 'Fat', Vegan: 12.3, Keto: 58.7, Paleo: 28.4, Mediterranean: 22.1 },
-  { nutrient: 'Protein/Carbs', Vegan: 0.4, Keto: 5.0, Paleo: 1.6, Mediterranean: 0.7 },
-  { nutrient: 'Carbs/Fat', Vegan: 3.7, Keto: 0.1, Paleo: 0.8, Mediterranean: 1.7 },
-];
-
-const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444'];
-const dietTypes = ['Vegan', 'Keto', 'Paleo', 'Mediterranean'];
+const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
 
 export default function RadarChartComponent({ filter, data }) {
-  const chartData = data
+  const chartData = data?.avg_macros
     ? [
         {
           nutrient: 'Protein',
-          ...Object.fromEntries(data.map((d) => [d.Diet_type, parseFloat(d['Protein(g)'].toFixed(1))])),
+          ...Object.fromEntries(
+            data.avg_macros.map((d) => [d.Diet_type, parseFloat(d['Protein(g)'].toFixed(1))])
+          ),
         },
         {
           nutrient: 'Carbs',
-          ...Object.fromEntries(data.map((d) => [d.Diet_type, parseFloat(d['Carbs(g)'].toFixed(1))])),
+          ...Object.fromEntries(
+            data.avg_macros.map((d) => [d.Diet_type, parseFloat(d['Carbs(g)'].toFixed(1))])
+          ),
         },
         {
           nutrient: 'Fat',
-          ...Object.fromEntries(data.map((d) => [d.Diet_type, parseFloat(d['Fat(g)'].toFixed(1))])),
+          ...Object.fromEntries(
+            data.avg_macros.map((d) => [d.Diet_type, parseFloat(d['Fat(g)'].toFixed(1))])
+          ),
         },
       ]
-    : fallback;
+    : [];
 
-  const availableDiets = data ? data.map((d) => d.Diet_type) : dietTypes;
-  const diets = filter === 'All' ? availableDiets : [filter];
+  const availableDiets = data?.avg_macros ? data.avg_macros.map((d) => d.Diet_type) : [];
+  const diets = filter === 'All' ? availableDiets : [filter.toLowerCase()];
 
   return (
     <ResponsiveContainer width="100%" height={300}>

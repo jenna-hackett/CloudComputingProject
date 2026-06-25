@@ -2,15 +2,38 @@
 
 import { useState, useEffect } from 'react';
 
-const mockData = [
-  { Diet_type: 'Vegan', 'Protein(g)': 18.5, 'Carbs(g)': 45.2, 'Fat(g)': 12.3 },
-  { Diet_type: 'Keto', 'Protein(g)': 42.1, 'Carbs(g)': 8.4, 'Fat(g)': 58.7 },
-  { Diet_type: 'Paleo', 'Protein(g)': 35.6, 'Carbs(g)': 22.1, 'Fat(g)': 28.4 },
-  { Diet_type: 'Mediterranean', 'Protein(g)': 28.3, 'Carbs(g)': 38.6, 'Fat(g)': 22.1 },
-  { Diet_type: 'Dash', 'Protein(g)': 24.7, 'Carbs(g)': 42.3, 'Fat(g)': 18.9 },
-];
+const mockData = {
+  avg_macros: [
+    { Diet_type: 'dash', 'Protein(g)': 69.28, 'Carbs(g)': 160.54, 'Fat(g)': 101.15 },
+    { Diet_type: 'keto', 'Protein(g)': 101.27, 'Carbs(g)': 57.97, 'Fat(g)': 153.12 },
+    { Diet_type: 'mediterranean', 'Protein(g)': 101.11, 'Carbs(g)': 152.91, 'Fat(g)': 101.42 },
+    { Diet_type: 'paleo', 'Protein(g)': 88.67, 'Carbs(g)': 129.55, 'Fat(g)': 135.67 },
+    { Diet_type: 'vegan', 'Protein(g)': 56.16, 'Carbs(g)': 254.0, 'Fat(g)': 103.3 },
+  ],
+  top_protein_recipes: [
+    { Diet_type: 'paleo', Recipe_name: "Swiss Paleo's Homemade Italian & Chorizo Sausage", 'Protein(g)': 1273.61 },
+    { Diet_type: 'dash', Recipe_name: 'Salmon Mousse', 'Protein(g)': 1239.47 },
+    { Diet_type: 'dash', Recipe_name: 'Homemade Turkey Alphabet Soup', 'Protein(g)': 1190.35 },
+    { Diet_type: 'paleo', Recipe_name: 'Turkey Soup', 'Protein(g)': 1142.58 },
+    { Diet_type: 'keto', Recipe_name: "Sara Louise's Keto Smoked Holiday Turkey", 'Protein(g)': 1092.0 },
+  ],
+  most_common_cuisines: [
+    { Diet_type: 'dash', Most_common_cuisine: 'american' },
+    { Diet_type: 'keto', Most_common_cuisine: 'american' },
+    { Diet_type: 'mediterranean', Most_common_cuisine: 'mediterranean' },
+    { Diet_type: 'paleo', Most_common_cuisine: 'american' },
+    { Diet_type: 'vegan', Most_common_cuisine: 'american' },
+  ],
+  avg_protein_to_carbs_ratio: [
+    { Diet_type: 'dash', Protein_to_Carbs_ratio: 1.49 },
+    { Diet_type: 'keto', Protein_to_Carbs_ratio: 4.12 },
+    { Diet_type: 'mediterranean', Protein_to_Carbs_ratio: 1.78 },
+    { Diet_type: 'paleo', Protein_to_Carbs_ratio: 2.06 },
+    { Diet_type: 'vegan', Protein_to_Carbs_ratio: 0.33 },
+  ],
+};
 
-const FUNCTION_URL = process.env.NEXT_PUBLIC_FUNCTION_URL || 'http://localhost:7071/api/nutritional_insights';
+const FUNCTION_URL = process.env.NEXT_PUBLIC_FUNCTION_URL || 'http://localhost:7071/api/nutritional-insights';
 
 export function useNutritionalData() {
   const [data, setData] = useState(mockData);
@@ -42,11 +65,11 @@ export function useNutritionalData() {
   };
 
   useEffect(() => {
-  const timer = setTimeout(() => {
-    fetchData();
-  }, 0);
-  return () => clearTimeout(timer);
-}, []);
+    const timer = setTimeout(() => {
+      fetchData();
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
 
   return { data, loading, error, executionTime, usingMock, refetch: fetchData };
 }
