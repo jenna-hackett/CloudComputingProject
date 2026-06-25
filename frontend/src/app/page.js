@@ -121,35 +121,6 @@ export default function Home() {
               <RadarChartComponent filter={dietFilter} data={data} />
             </div>
           </div>
-
-          {/* API Data Interaction */}
-          <div className="bg-gray-900 rounded-2xl p-6 mb-6">
-            <h2 className="text-xl font-bold mb-4 text-white">API Data Interaction</h2>
-            <div className="flex gap-4 flex-wrap items-center">
-              <button
-                onClick={() => handleApiButton('Nutritional Insights')}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
-              >
-                Get Nutritional Insights
-              </button>
-              <button
-                onClick={() => handleApiButton('Recipes')}
-                className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
-              >
-                Get Recipes
-              </button>
-              <button
-                onClick={() => handleApiButton('Clusters')}
-                className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
-              >
-                Get Clusters
-              </button>
-              {apiMessage && (
-                <span className="text-sm text-gray-300">{apiMessage}</span>
-              )}
-            </div>
-          </div>
-
         </div>
       </main>
 
