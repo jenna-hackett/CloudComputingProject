@@ -11,7 +11,7 @@ import {
   ResponsiveContainer
 } from 'recharts';
 
-const mockData = [
+const fallback = [
   { diet: 'Vegan', protein: 18.5, carbs: 45.2, fat: 12.3 },
   { diet: 'Keto', protein: 42.1, carbs: 8.4, fat: 58.7 },
   { diet: 'Paleo', protein: 35.6, carbs: 22.1, fat: 28.4 },
@@ -19,14 +19,23 @@ const mockData = [
   { diet: 'Dash', protein: 24.7, carbs: 42.3, fat: 18.9 },
 ];
 
-export default function BarChartComponent({ filter }) {
-  const data = filter === 'All'
-    ? mockData
-    : mockData.filter((d) => d.diet === filter);
+export default function BarChartComponent({ filter, data }) {
+  const chartData = data
+    ? data.map((d) => ({
+        diet: d.Diet_type,
+        protein: parseFloat(d['Protein(g)'].toFixed(1)),
+        carbs: parseFloat(d['Carbs(g)'].toFixed(1)),
+        fat: parseFloat(d['Fat(g)'].toFixed(1)),
+      }))
+    : fallback;
+
+  const filtered = filter === 'All'
+    ? chartData
+    : chartData.filter((d) => d.diet === filter);
 
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <BarChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+      <BarChart data={filtered} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
         <XAxis dataKey="diet" tick={{ fill: '#9CA3AF', fontSize: 12 }} />
         <YAxis tick={{ fill: '#9CA3AF', fontSize: 12 }} />
