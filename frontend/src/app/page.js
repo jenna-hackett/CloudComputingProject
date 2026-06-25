@@ -1,25 +1,69 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import BarChartComponent from '@/components/BarChartComponent';
 import PieChartComponent from '@/components/PieChartComponent';
 import LineChartComponent from '@/components/LineChartComponent';
 import RadarChartComponent from '@/components/RadarChartComponent';
+import StatsCards from '@/components/StatsCards';
+import MetadataBar from '@/components/MetadataBar';
 
 export default function Home() {
   const [dietFilter, setDietFilter] = useState('All');
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState('');
+  const [executionTime, setExecutionTime] = useState(142);
 
-  const dietTypes = ['All', 'Vegan', 'Keto', 'Paleo', 'Mediterranean'];
+  const dietTypes = ['All', 'Vegan', 'Keto', 'Paleo', 'Mediterranean', 'Dash'];
+
+  useEffect(() => {
+  const timer = setTimeout(() => {
+    setLastUpdated(new Date().toLocaleTimeString());
+  }, 0);
+  return () => clearTimeout(timer);
+}, []);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+      setLastUpdated(new Date().toLocaleTimeString());
+      setExecutionTime(Math.floor(Math.random() * 200) + 100);
+    }, 1500);
+  };
 
   return (
     <main className="min-h-screen bg-gray-950 text-white p-8">
       <div className="max-w-7xl mx-auto">
-        
+
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-blue-400 mb-2">Nutritional Insights</h1>
-          <p className="text-gray-400">Explore macronutrient data across diet types and cuisines</p>
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-4xl font-bold text-blue-400 mb-2">Nutritional Insights</h1>
+            <p className="text-gray-400">Explore macronutrient data across diet types and cuisines</p>
+          </div>
+          <button
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className={`px-6 py-3 rounded-xl font-medium transition-all ${
+              isRefreshing
+                ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                : 'bg-blue-500 hover:bg-blue-600 text-white'
+            }`}
+          >
+            {isRefreshing ? '⟳ Refreshing...' : '⟳ Refresh Data'}
+          </button>
         </div>
+
+        {/* Stats Cards */}
+        <StatsCards />
+
+        {/* Metadata Bar */}
+        <MetadataBar
+          lastUpdated={lastUpdated}
+          executionTime={executionTime}
+          recordCount="1,180"
+        />
 
         {/* Filter Bar */}
         <div className="flex gap-3 mb-8 flex-wrap">
