@@ -9,27 +9,19 @@ import {
   ResponsiveContainer
 } from 'recharts';
 
-const fallback = [
-  { name: 'Vegan', value: 245 },
-  { name: 'Keto', value: 189 },
-  { name: 'Paleo', value: 312 },
-  { name: 'Mediterranean', value: 278 },
-  { name: 'Dash', value: 156 },
-];
-
 const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
 
 export default function PieChartComponent({ filter, data }) {
-  const chartData = data
-    ? data.map((d) => ({
+  const chartData = data?.avg_macros
+    ? data.avg_macros.map((d) => ({
         name: d.Diet_type,
         value: parseFloat(d['Protein(g)'].toFixed(1)),
       }))
-    : fallback;
+    : [];
 
   const filtered = filter === 'All'
     ? chartData
-    : chartData.filter((d) => d.name === filter);
+    : chartData.filter((d) => d.name.toLowerCase() === filter.toLowerCase());
 
   return (
     <ResponsiveContainer width="100%" height={300}>
