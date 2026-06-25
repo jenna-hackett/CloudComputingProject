@@ -11,7 +11,7 @@ import {
   ResponsiveContainer
 } from 'recharts';
 
-const mockData = [
+const fallback = [
   { nutrient: 'Protein', Vegan: 18.5, Keto: 42.1, Paleo: 35.6, Mediterranean: 28.3 },
   { nutrient: 'Carbs', Vegan: 45.2, Keto: 8.4, Paleo: 22.1, Mediterranean: 38.6 },
   { nutrient: 'Fat', Vegan: 12.3, Keto: 58.7, Paleo: 28.4, Mediterranean: 22.1 },
@@ -20,15 +20,32 @@ const mockData = [
 ];
 
 const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444'];
-
 const dietTypes = ['Vegan', 'Keto', 'Paleo', 'Mediterranean'];
 
-export default function RadarChartComponent({ filter }) {
-  const diets = filter === 'All' ? dietTypes : [filter];
+export default function RadarChartComponent({ filter, data }) {
+  const chartData = data
+    ? [
+        {
+          nutrient: 'Protein',
+          ...Object.fromEntries(data.map((d) => [d.Diet_type, parseFloat(d['Protein(g)'].toFixed(1))])),
+        },
+        {
+          nutrient: 'Carbs',
+          ...Object.fromEntries(data.map((d) => [d.Diet_type, parseFloat(d['Carbs(g)'].toFixed(1))])),
+        },
+        {
+          nutrient: 'Fat',
+          ...Object.fromEntries(data.map((d) => [d.Diet_type, parseFloat(d['Fat(g)'].toFixed(1))])),
+        },
+      ]
+    : fallback;
+
+  const availableDiets = data ? data.map((d) => d.Diet_type) : dietTypes;
+  const diets = filter === 'All' ? availableDiets : [filter];
 
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <RadarChart data={mockData}>
+      <RadarChart data={chartData}>
         <PolarGrid stroke="#374151" />
         <PolarAngleAxis dataKey="nutrient" tick={{ fill: '#9CA3AF', fontSize: 12 }} />
         <PolarRadiusAxis tick={{ fill: '#9CA3AF', fontSize: 10 }} />

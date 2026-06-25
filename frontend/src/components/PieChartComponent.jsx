@@ -9,7 +9,7 @@ import {
   ResponsiveContainer
 } from 'recharts';
 
-const mockData = [
+const fallback = [
   { name: 'Vegan', value: 245 },
   { name: 'Keto', value: 189 },
   { name: 'Paleo', value: 312 },
@@ -19,16 +19,23 @@ const mockData = [
 
 const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
 
-export default function PieChartComponent({ filter }) {
-  const data = filter === 'All'
-    ? mockData
-    : mockData.filter((d) => d.name === filter);
+export default function PieChartComponent({ filter, data }) {
+  const chartData = data
+    ? data.map((d) => ({
+        name: d.Diet_type,
+        value: parseFloat(d['Protein(g)'].toFixed(1)),
+      }))
+    : fallback;
+
+  const filtered = filter === 'All'
+    ? chartData
+    : chartData.filter((d) => d.name === filter);
 
   return (
     <ResponsiveContainer width="100%" height={300}>
       <PieChart>
         <Pie
-          data={data}
+          data={filtered}
           cx="50%"
           cy="50%"
           outerRadius={100}
@@ -36,7 +43,7 @@ export default function PieChartComponent({ filter }) {
           label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
           labelLine={false}
         >
-          {data.map((entry, index) => (
+          {filtered.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
