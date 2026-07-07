@@ -115,7 +115,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="bg-blue-500 text-white text-center py-4 text-sm">
-        © 2025 Nutritional Insights. All Rights Reserved.
+        © 2026 Nutritional Insights. All Rights Reserved.
       </footer>
     </div>
   );
