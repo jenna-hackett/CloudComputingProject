@@ -33,7 +33,10 @@ const mockData = {
   ],
 };
 
-const FUNCTION_URL = process.env.NEXT_PUBLIC_FUNCTION_URL || 'http://localhost:7071/api/nutritional-insights';
+const FUNCTION_URL = process.env.NEXT_PUBLIC_FUNCTION_URL || 
+  (typeof window !== 'undefined' && window.location.hostname !== 'localhost' 
+    ? 'https://diet-analysis-afb4ceacghajcsbp.canadacentral-01.azurewebsites.net/api/nutritional-insights'
+    : 'http://localhost:7071/api/nutritional-insights');
 
 export function useNutritionalData() {
   const [data, setData] = useState(mockData);
