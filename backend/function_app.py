@@ -4,6 +4,8 @@ import pandas as pd
 import numpy as np
 import json
 import os
+import io
+from azure.storage.blob import BlobServiceClient
 
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
@@ -14,10 +16,14 @@ def diets_analysis(req: func.HttpRequest) -> func.HttpResponse:
 
     try:
         # --- LOAD CSV ---
-        # LOCAL TESTING: read CSV directly from repo
-        # TODO: swap this out for Blob Storage when deploying to Azure
-        csv_path = os.path.join(os.path.dirname(__file__), "All_Diets.csv")
-        df = pd.read_csv(csv_path)
+        connect_str = os.environ.get("AZURE_STORAGE_CONNECTION_STRING")
+        blob_service_client = BlobServiceClient.from_connection_string(connect_str)
+        blob_client = blob_service_client.get_blob_client(
+            container="datasets",
+            blob="All_Diets.csv"
+        )
+        stream = blob_client.download_blob().readall()
+        df = pd.read_csv(io.BytesIO(stream))
         logging.info(f"Dataset loaded: {df.shape[0]} rows, {df.shape[1]} columns")
 
         # --- DATA CLEANING ---
